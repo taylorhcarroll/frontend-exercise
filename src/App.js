@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchAllPokemon, fetchPokemonDetailsByName } from "./api";
+import { fetchAllPokemon, fetchEvolutionChainById, fetchPokemonDetailsByName, fetchPokemonSpeciesByName } from "./api";
 
 function App() {
     const [pokemonIndex, setPokemonIndex] = useState([])
@@ -28,14 +28,44 @@ function App() {
         setSearchValue(event.target.value);
     }
 
+    const parseEvolutionChain = (chain) => {
+        const evolutionChain = [];
+        const traverseChain = (stage) => {
+            evolutionChain.push(stage.species.name);
+            //eevee makes this a little complicated since it's a split evo path
+            stage.evolves_to.forEach(evolution => {
+                traverseChain(evolution);
+            });
+        };
+
+        traverseChain(chain);
+        return evolutionChain;
+    };
+
     const onGetDetails = (name) => async () => {
         const fetchPokemonDetails = async () => {
-            const response = await fetchPokemonDetailsByName(name)
-            console.log("pokemon: ", response)
-            setPokemonDetails(response)
-        }
-        fetchPokemonDetails().then(() => {
+            const details = await fetchPokemonDetailsByName(name)
+            console.log("pokemon: ", details)
+            setPokemonDetails(details)
+            const species = await fetchPokemonSpeciesByName(name)
+            console.log("species :", species)
 
+            if (species.evolution_chain?.url) {
+                const evolutionChain = await fetchEvolutionChainById(species.evolution_chain.url.split('/').slice(-2, -1)[0]);
+                console.log("evolutionChain:", evolutionChain);
+                const evolutionDisplay = [];
+                setPokemonIndex(evolutionChain)
+            }
+        }
+        // const fetchPokemonSpecies = async () => {
+        //     const response = await fetchPokemonSpeciesByName(name)
+        //     console.log("species :", response)
+        //     setPokemon
+        // }
+        fetchPokemonDetails().then(() => {
+            // const fetchEvolutionChain = await fetchEvolutionChainById(species.)
+            // const evolutionChain =
+            //}
         })
     }
 
@@ -69,6 +99,10 @@ function App() {
             {pokemonDetails && (
                 <div className={'pokedex__details'}>
                     <h2>{pokemonDetails.name}</h2>
+                    {/* I know this is not in the mockup, but I want to show alt text is important. Can be removed */}
+                    {pokemonDetails.sprites && (
+                        <img alt={`${pokemonDetails.name}_sprite_front`} src={pokemonDetails.sprites.front_default}></img>
+                    )}
                     <h3>Types:</h3>
                     <ul>
                         {pokemonDetails.types.map((type, index) => (
@@ -81,10 +115,13 @@ function App() {
                             <li key={index}>{move.move.name}</li>
                         ))}
                     </ul>
+
+                    <h3>Evolutions</h3>
+
                 </div>
             )
             }
-        </div>
+        </div >
     );
 }
 
