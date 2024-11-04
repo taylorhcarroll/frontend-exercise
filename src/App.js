@@ -72,29 +72,36 @@ function App() {
     return (
         <div className={'pokedex__container'}>
             <div className={'pokedex__search-input'}>
-                <input value={searchValue} onChange={onSearchValueChange} placeholder={'Search Pokemon'} />
+                <input
+                    value={searchValue}
+                    onChange={onSearchValueChange}
+                    placeholder={'Search Pokemon'}
+                    aria-label="Search Pokemon" />
             </div>
             <div className={'pokedex__content'}>
-                {filteredPokemon.length > 0 ? (
-                    <div className={'pokedex__search-results'}>
-                        {
-                            filteredPokemon.map(monster => {
-                                return (
-                                    <div className={'pokedex__list-item'} key={monster.name}>
-                                        <div className={'pokedex__list-content'}>
-                                            <div>
-                                                {monster.name}
-                                            </div>
-                                            <button onClick={onGetDetails(monster.name)}>Get Details</button>
+                <div className={'pokedex__search-results'}>
+                    {filteredPokemon.length > 0 ? (
+
+                        filteredPokemon.map(monster => {
+                            return (
+                                <div className={'pokedex__list-item'} key={monster.name}>
+                                    <div className={'pokedex__list-content'}>
+                                        <div>
+                                            {monster.name}
                                         </div>
+                                        <button onClick={onGetDetails(monster.name)}>Get Details</button>
                                     </div>
-                                )
-                            })
-                        }
-                    </div>
-                ) : (
-                    <div>No Results Found</div>
-                )}
+                                </div>
+                            )
+                        })
+                    ) : (
+                        <div className={'pokedex__list-item'}>
+                            <div className={'pokedex__list-content'}>
+                                No Results Found
+                            </div>
+                        </div>
+                    )}
+                </div>
                 {Object.keys(pokemonDetails).length > 0 && (
                     <div className={'pokedex__details'}>
                         <h2>{pokemonDetails.name}</h2>
