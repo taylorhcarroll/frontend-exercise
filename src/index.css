@@ -15,6 +15,9 @@ body {
   justify-content: center;
   flex-direction: column;
   --default-font-size: 1rem;
+  --pokedex-border-color-primary: #FF0000;
+  --pokedex-border-color-secondary: #000000;
+  --pokedex-border-radius: 6px;
 }
 
 .pokedex__content {
@@ -25,7 +28,6 @@ body {
   justify-content: center;
   /* max-width: 300px; */
   /* padding: 1rem; */
-  border-radius: 4px;
 }
 
 .pokedex__search-input {
@@ -44,14 +46,21 @@ body {
 }
 
 .pokedex__search-results {
-  border: 2px solid, red;
+  list-style: none;
+  border: 2px solid var(--pokedex-border-color-primary);
+  border-radius: var(--pokedex-border-radius);
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 300px;
   overflow-y: auto;
+  scrollbar-width: none;
   max-height: 70vh;
   /* gap: .5rem; no gap needed here */
+}
+
+.pokedex__search-results::-webkit-scrollbar {
+  display: none;
 }
 
 .pokedex__list-item {
@@ -71,19 +80,49 @@ body {
   padding: 1.5rem 1rem;
 }
 
-/* this could also be done with just a border bottom, 
+/* this could also be done with just a border bottom,
 but I wanted to show different things I know about css */
 .pokedex__list-item::after {
   display: flex;
   content: '';
   width: 100%;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--pokedex-border-color-secondary);
 }
 
 .pokedex__details {
   display: flex;
+  justify-content: center;
   flex-direction: column;
   width: 100%;
-  max-width: 300px;
-  border: 1px solid black;
+  max-width: 400px;
+  border: 2px solid var(--pokedex-border-color-secondary);
+  border-radius: var(--pokedex-border-radius);
+}
+
+.pokedex__details-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.pokedex__details-column {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+}
+
+#pokedex__details-evolutionChain {
+  list-style-type: none;
+  font-style: italic;
+  display: flex;
+  flex-flow: row;
+  gap: .5rem;
+  padding: 0px;
+}
+
+#pokedex__details-sprite {
+  width: 100%;
+  max-width: 200px;
+  max-height: 100%;
+  height: 200px;
 }

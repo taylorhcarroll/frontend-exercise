@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { fetchAllPokemon, fetchEvolutionChainById, fetchPokemonDetailsByName, fetchPokemonSpeciesByName } from "./api/api";
 
 function App() {
@@ -6,6 +6,8 @@ function App() {
     const [pokemon, setPokemon] = useState([])
     const [searchValue, setSearchValue] = useState('')
     const [pokemonDetails, setPokemonDetails] = useState({})
+    //adding this details ref to keep track of the focus, mostly useful for screenreaders in this case
+    const detailsRef = useRef(null);
 
     useEffect(() => {
         const fetchPokemon = async () => {
@@ -17,7 +19,11 @@ function App() {
         })
     }, [])
 
-
+    useEffect(() => {
+        if (Object.keys(pokemonDetails).length > 0 && detailsRef.current) {
+            detailsRef.current.focus();
+        }
+    }, [pokemonDetails]);
 
     const filteredPokemon = useMemo(() => {
         const lowerCaseSearch = searchValue.toLowerCase();
@@ -49,7 +55,6 @@ function App() {
             setPokemonDetails(details)
             const species = await fetchPokemonSpeciesByName(name)
             console.log("species :", species)
-
             if (species.evolution_chain?.url) {
                 const evolutionChain = await fetchEvolutionChainById(species.evolution_chain.url.split('/').slice(-2, -1)[0]);
                 console.log("evolutionChain:", evolutionChain);
@@ -89,7 +94,7 @@ function App() {
                                         <div>
                                             {monster.name}
                                         </div>
-                                        <button onClick={onGetDetails(monster.name)}>Get Details</button>
+                                        <button onClick={onGetDetails(monster.name)} aria-label={`Get details about ${monster.name}`}>Get Details</button>
                                     </div>
                                 </div>
                             )
@@ -103,28 +108,45 @@ function App() {
                     )}
                 </div>
                 {Object.keys(pokemonDetails).length > 0 && (
-                    <div className={'pokedex__details'}>
-                        <h2>{pokemonDetails.name}</h2>
-                        {/* I know this is not in the mockup, but I want to show alt text is important. Can be removed */}
-                        {pokemonDetails.sprites && (
-                            <img alt={`${pokemonDetails.name}_sprite_front`} src={pokemonDetails.sprites.front_default}></img>
-                        )}
-                        <h3>Types:</h3>
-                        <ul>
-                            {pokemonDetails.types?.map((type, index) => (
-                                <li key={index}>{type.type.name}</li>
-                            ))}
-                        </ul>
-                        <h3>Moves:</h3>
-                        <ul>
-                            {pokemonDetails.moves?.map((move, index) => (
-                                <li key={index}>{move.move.name}</li>
-                            ))}
-                        </ul>
-
-                        <h3>Evolutions</h3>
+                    <div className={'pokedex__details'}
+                        ref={detailsRef}
+                        role="region"
+                        aria-live="polite"
+                        aria-labelledby="pokedex-details-title">
+                        <div className={"pokedex__details-row"}>
+                            <h2 className={"pokedex__details-title"} id={"pokedex__details-title"}>{pokemonDetails.name}</h2>
+                        </div>
+                        <div className={"pokedex__details-row"}>
+                            {/* I know this is not in the mockup, but I want to show alt text is important. Can be removed */}
+                            {pokemonDetails.sprites && (
+                                <img id={"pokedex__details-sprite"} alt={`${pokemonDetails.name} front sprite`} src={pokemonDetails.sprites.front_default}></img>
+                            )}
+                        </div>
+                        <div className={"pokedex__details-row"}>
+                            <div className={"pokedex__details-column"}>
+                                <h3>Types:</h3>
+                                <ul>
+                                    {pokemonDetails.types?.map((type, index) => (
+                                        <li key={index}>{type.type.name}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className={"pokedex__details-column"}>
+                                <h3>Moves:</h3>
+                                <ul>
+                                    {pokemonDetails.moves?.map((move, index) => (
+                                        <li key={index}>{move.move.name}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className={"pokedex__details-row"}>
+                            <div className={"pokedex__details-column"}>
+                                <h3>Evolutions</h3>
+                            </div>
+                        </div>
                         {pokemonDetails.evolutionDisplay && (
-                            <ul>
+                            <ul className={"pokedex__details-row"} id={"pokedex__details-evolutionChain"}>
                                 {pokemonDetails.evolutionDisplay.map((evolution, index) => (
                                     <li key={index}>{evolution}</li>
                                 ))}
