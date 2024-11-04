@@ -5,7 +5,7 @@ function App() {
     const [pokemonIndex, setPokemonIndex] = useState([])
     const [pokemon, setPokemon] = useState([])
     const [searchValue, setSearchValue] = useState('')
-    const [pokemonDetails, setPokemonDetails] = useState()
+    const [pokemonDetails, setPokemonDetails] = useState({})
 
     useEffect(() => {
         const fetchPokemon = async () => {
@@ -53,8 +53,13 @@ function App() {
             if (species.evolution_chain?.url) {
                 const evolutionChain = await fetchEvolutionChainById(species.evolution_chain.url.split('/').slice(-2, -1)[0]);
                 console.log("evolutionChain:", evolutionChain);
-                const evolutionDisplay = [];
-                setPokemonIndex(evolutionChain)
+                const evolutionDisplay = parseEvolutionChain(evolutionChain.chain)
+                console.log("evo display: ", evolutionDisplay)
+                setPokemonDetails(prev => ({
+                    ...prev,
+                    evolutionDisplay
+                }));
+                console.log("pokemonDetails updated: ", pokemonDetails)
             }
         }
         // const fetchPokemonSpecies = async () => {
@@ -105,19 +110,25 @@ function App() {
                     )}
                     <h3>Types:</h3>
                     <ul>
-                        {pokemonDetails.types.map((type, index) => (
+                        {pokemonDetails.types?.map((type, index) => (
                             <li key={index}>{type.type.name}</li>
                         ))}
                     </ul>
                     <h3>Moves:</h3>
                     <ul>
-                        {pokemonDetails.moves.map((move, index) => (
+                        {pokemonDetails.moves?.map((move, index) => (
                             <li key={index}>{move.move.name}</li>
                         ))}
                     </ul>
 
                     <h3>Evolutions</h3>
-
+                    {pokemonDetails.evolutionDisplay && (
+                        <ul>
+                            {pokemonDetails.evolutionDisplay.map((evolution, index) => (
+                                <li key={index}>{evolution}</li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             )
             }
