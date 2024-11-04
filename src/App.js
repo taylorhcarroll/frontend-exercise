@@ -10,7 +10,6 @@ function App() {
     useEffect(() => {
         const fetchPokemon = async () => {
             const { results: pokemonList } = await fetchAllPokemon()
-            console.log("pokemon: ", pokemonList)
             setPokemon(pokemonList)
         }
         fetchPokemon().then(() => {
@@ -32,9 +31,8 @@ function App() {
     const onGetDetails = (name) => async () => {
         const fetchPokemonDetails = async () => {
             const response = await fetchPokemonDetailsByName(name)
-            console.log("name :", name)
             console.log("pokemon: ", response)
-            setPokemonIndex(response)
+            setPokemonDetails(response)
         }
         fetchPokemonDetails().then(() => {
 
@@ -67,13 +65,14 @@ function App() {
                 ) : (
                     <div>No Results Found</div>
                 )}
-                {pokemonDetails && (
-                    <div className={'pokedex__details'}>
-                        {/*  code here  */}
-                    </div>
-                )
-                }
             </div>
+            {pokemonDetails && (
+                <div className={'pokedex__details'}>
+                    <h2>{pokemonDetails.name}</h2>
+
+                </div>
+            )
+            }
         </div>
     );
 }

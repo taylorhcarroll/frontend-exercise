@@ -77,4 +77,10 @@ but I wanted to show different things I know about css */
   border-bottom: 1px solid black;
 }
 
-.pokedex__details {}
+.pokedex__details {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid black;
+}
