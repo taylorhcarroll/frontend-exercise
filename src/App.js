@@ -1,32 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchAllPokemon } from "./api";
 
 function App() {
     const [pokemonIndex, setPokemonIndex] = useState([])
-    const [pokemon, setPokemon] = useState([])
+    //const [pokemon, setPokemon] = useState([])
     const [searchValue, setSearchValue] = useState('')
     const [pokemonDetails, setPokemonDetails] = useState()
 
     useEffect(() => {
         const fetchPokemon = async () => {
-            const {results: pokemonList} = await fetchAllPokemon()
-
-            setPokemon(pokemonList)
+            const { results: pokemonList } = await fetchAllPokemon()
+            console.log("pokemon: ", pokemonList)
             setPokemonIndex(pokemonList)
         }
-
         fetchPokemon().then(() => {
-            /** noop **/
+
         })
-    }, [searchValue])
+    }, [])
+
+
+
+    const filteredPokemon = useMemo(() => {
+        const lowerCaseSearch = searchValue.toLowerCase();
+        return pokemonIndex.filter(monster => monster.name.toLowerCase().includes(lowerCaseSearch));
+    }, [pokemonIndex, searchValue]);
 
     const onSearchValueChange = (event) => {
-        const value = event.target.value
-        setSearchValue(value)
-
-        setPokemon(
-            pokemonIndex.filter(monster => !monster.name.includes(value))
-        )
+        setSearchValue(event.target.value);
     }
 
     const onGetDetails = (name) => async () => {
@@ -36,13 +36,13 @@ function App() {
     return (
         <div className={'pokedex__container'}>
             <div className={'pokedex__search-input'}>
-                <input value={searchValue} onChange={onSearchValueChange} placeholder={'Search Pokemon'}/>
+                <input value={searchValue} onChange={onSearchValueChange} placeholder={'Search Pokemon'} />
             </div>
             <div className={'pokedex__content'}>
-                {pokemon.length > 0 && (
+                {filteredPokemon.length > 0 && (
                     <div className={'pokedex__search-results'}>
                         {
-                            pokemon.map(monster => {
+                            filteredPokemon.map(monster => {
                                 return (
                                     <div className={'pokedex__list-item'} key={monster.name}>
                                         <div>
