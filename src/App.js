@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchAllPokemon, fetchEvolutionChainById, fetchPokemonDetailsByName, fetchPokemonSpeciesByName } from "./api";
+import { fetchAllPokemon, fetchEvolutionChainById, fetchPokemonDetailsByName, fetchPokemonSpeciesByName } from "./api/api";
 
 function App() {
     const [pokemonIndex, setPokemonIndex] = useState([])
@@ -62,11 +62,6 @@ function App() {
                 console.log("pokemonDetails updated: ", pokemonDetails)
             }
         }
-        // const fetchPokemonSpecies = async () => {
-        //     const response = await fetchPokemonSpeciesByName(name)
-        //     console.log("species :", response)
-        //     setPokemon
-        // }
         fetchPokemonDetails().then(() => {
             // const fetchEvolutionChain = await fetchEvolutionChainById(species.)
             // const evolutionChain =
@@ -100,38 +95,37 @@ function App() {
                 ) : (
                     <div>No Results Found</div>
                 )}
-            </div>
-            {pokemonDetails && (
-                <div className={'pokedex__details'}>
-                    <h2>{pokemonDetails.name}</h2>
-                    {/* I know this is not in the mockup, but I want to show alt text is important. Can be removed */}
-                    {pokemonDetails.sprites && (
-                        <img alt={`${pokemonDetails.name}_sprite_front`} src={pokemonDetails.sprites.front_default}></img>
-                    )}
-                    <h3>Types:</h3>
-                    <ul>
-                        {pokemonDetails.types?.map((type, index) => (
-                            <li key={index}>{type.type.name}</li>
-                        ))}
-                    </ul>
-                    <h3>Moves:</h3>
-                    <ul>
-                        {pokemonDetails.moves?.map((move, index) => (
-                            <li key={index}>{move.move.name}</li>
-                        ))}
-                    </ul>
-
-                    <h3>Evolutions</h3>
-                    {pokemonDetails.evolutionDisplay && (
+                {Object.keys(pokemonDetails).length > 0 && (
+                    <div className={'pokedex__details'}>
+                        <h2>{pokemonDetails.name}</h2>
+                        {/* I know this is not in the mockup, but I want to show alt text is important. Can be removed */}
+                        {pokemonDetails.sprites && (
+                            <img alt={`${pokemonDetails.name}_sprite_front`} src={pokemonDetails.sprites.front_default}></img>
+                        )}
+                        <h3>Types:</h3>
                         <ul>
-                            {pokemonDetails.evolutionDisplay.map((evolution, index) => (
-                                <li key={index}>{evolution}</li>
+                            {pokemonDetails.types?.map((type, index) => (
+                                <li key={index}>{type.type.name}</li>
                             ))}
                         </ul>
-                    )}
-                </div>
-            )
-            }
+                        <h3>Moves:</h3>
+                        <ul>
+                            {pokemonDetails.moves?.map((move, index) => (
+                                <li key={index}>{move.move.name}</li>
+                            ))}
+                        </ul>
+
+                        <h3>Evolutions</h3>
+                        {pokemonDetails.evolutionDisplay && (
+                            <ul>
+                                {pokemonDetails.evolutionDisplay.map((evolution, index) => (
+                                    <li key={index}>{evolution}</li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                )}
+            </div>
         </div >
     );
 }

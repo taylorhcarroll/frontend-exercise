@@ -19,11 +19,11 @@ body {
 
 .pokedex__content {
   display: flex;
-  flex-flow: column;
+  flex-flow: row;
   gap: 5rem;
   width: 100%;
-  max-width: 300px;
-  border: 2px solid, red;
+  justify-content: center;
+  /* max-width: 300px; */
   /* padding: 1rem; */
   border-radius: 4px;
 }
@@ -44,10 +44,13 @@ body {
 }
 
 .pokedex__search-results {
+  border: 2px solid, red;
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 300px;
+  overflow-y: auto;
+  max-height: 70vh;
   /* gap: .5rem; no gap needed here */
 }
 
