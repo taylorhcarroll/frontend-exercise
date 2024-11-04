@@ -69,7 +69,18 @@ function App() {
             {pokemonDetails && (
                 <div className={'pokedex__details'}>
                     <h2>{pokemonDetails.name}</h2>
-
+                    <h3>Types:</h3>
+                    <ul>
+                        {pokemonDetails.types.map((type, index) => (
+                            <li key={index}>{type.type.name}</li>
+                        ))}
+                    </ul>
+                    <h3>Moves:</h3>
+                    <ul>
+                        {pokemonDetails.moves.map((move, index) => (
+                            <li key={index}>{move.move.name}</li>
+                        ))}
+                    </ul>
                 </div>
             )
             }
