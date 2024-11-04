@@ -7,9 +7,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* * {
-  border: 1px dotted red;
-} */
 
 .pokedex__container {
   padding: 2rem;
@@ -17,6 +14,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  --default-font-size: 1rem;
 }
 
 .pokedex__content {
@@ -25,25 +23,58 @@ body {
   gap: 5rem;
   width: 100%;
   max-width: 300px;
-  border: 1px solid, red;
-  padding: 1rem;
-  border-radius: 8px;
+  border: 2px solid, red;
+  /* padding: 1rem; */
+  border-radius: 4px;
 }
 
 .pokedex__search-input {
   margin-bottom: 1rem;
-  padding: 0.5rem;
-  font-size: 1rem;
+  padding: .5rem 1rem .5rem 1rem;
+  font-size: var(--default-font-size);
   width: 100%;
   max-width: 300px;
   box-sizing: border-box;
 }
 
+.pokedex__search-input input {
+  box-sizing: border-box;
+  padding: .25rem 2px .25rem 2px;
+  width: 100%;
+}
+
 .pokedex__search-results {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  /* gap: .5rem; no gap needed here */
 }
 
-.pokedex__list-item {}
+.pokedex__list-item {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  font-size: var(--default-font-size);
+}
+
+.pokedex__list-content {
+  box-sizing: border-box;
+  display: flex;
+  /* I would suggest space-between is better visually, but mockup want space-around. */
+  justify-content: space-around;
+  flex-flow: row;
+  width: 100%;
+  padding: 1.5rem 1rem;
+}
+
+/* this could also be done with just a border bottom, 
+but I wanted to show different things I know about css */
+.pokedex__list-item::after {
+  display: flex;
+  content: '';
+  width: 100%;
+  border-bottom: 1px solid black;
+}
 
 .pokedex__details {}

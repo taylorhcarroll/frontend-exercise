@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchAllPokemon } from "./api";
+import { fetchAllPokemon, fetchPokemonDetailsByName } from "./api";
 
 function App() {
     const [pokemonIndex, setPokemonIndex] = useState([])
-    //const [pokemon, setPokemon] = useState([])
+    const [pokemon, setPokemon] = useState([])
     const [searchValue, setSearchValue] = useState('')
     const [pokemonDetails, setPokemonDetails] = useState()
 
@@ -11,7 +11,7 @@ function App() {
         const fetchPokemon = async () => {
             const { results: pokemonList } = await fetchAllPokemon()
             console.log("pokemon: ", pokemonList)
-            setPokemonIndex(pokemonList)
+            setPokemon(pokemonList)
         }
         fetchPokemon().then(() => {
 
@@ -22,15 +22,23 @@ function App() {
 
     const filteredPokemon = useMemo(() => {
         const lowerCaseSearch = searchValue.toLowerCase();
-        return pokemonIndex.filter(monster => monster.name.toLowerCase().includes(lowerCaseSearch));
-    }, [pokemonIndex, searchValue]);
+        return pokemon.filter(monster => monster.name.toLowerCase().includes(lowerCaseSearch));
+    }, [pokemon, searchValue]);
 
     const onSearchValueChange = (event) => {
         setSearchValue(event.target.value);
     }
 
     const onGetDetails = (name) => async () => {
-        /** code here **/
+        const fetchPokemonDetails = async () => {
+            const response = await fetchPokemonDetailsByName(name)
+            console.log("name :", name)
+            console.log("pokemon: ", response)
+            setPokemonIndex(response)
+        }
+        fetchPokemonDetails().then(() => {
+
+        })
     }
 
     return (
@@ -45,10 +53,12 @@ function App() {
                             filteredPokemon.map(monster => {
                                 return (
                                     <div className={'pokedex__list-item'} key={monster.name}>
-                                        <div>
-                                            {monster.name}
+                                        <div className={'pokedex__list-content'}>
+                                            <div>
+                                                {monster.name}
+                                            </div>
+                                            <button onClick={onGetDetails(monster.name)}>Get Details</button>
                                         </div>
-                                        <button onClick={onGetDetails(monster.name)}>Get Details</button>
                                     </div>
                                 )
                             })

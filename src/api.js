@@ -9,6 +9,7 @@ export const fetchPokemonSpeciesByName = (name) => {
 }
 
 export const fetchPokemonDetailsByName = (name) => {
+    console.log(`${base}/pokemon/${name}`)
     return fetch(`${base}/pokemon/${name}`).then(response => response.json())
 }
 
