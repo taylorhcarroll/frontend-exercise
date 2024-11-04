@@ -39,7 +39,7 @@ function App() {
                 <input value={searchValue} onChange={onSearchValueChange} placeholder={'Search Pokemon'} />
             </div>
             <div className={'pokedex__content'}>
-                {filteredPokemon.length > 0 && (
+                {filteredPokemon.length > 0 ? (
                     <div className={'pokedex__search-results'}>
                         {
                             filteredPokemon.map(monster => {
@@ -54,13 +54,14 @@ function App() {
                             })
                         }
                     </div>
+                ) : (
+                    <div>No Results Found</div>
                 )}
-                {
-                    pokemonDetails && (
-                        <div className={'pokedex__details'}>
-                            {/*  code here  */}
-                        </div>
-                    )
+                {pokemonDetails && (
+                    <div className={'pokedex__details'}>
+                        {/*  code here  */}
+                    </div>
+                )
                 }
             </div>
         </div>
