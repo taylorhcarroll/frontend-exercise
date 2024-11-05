@@ -47,7 +47,31 @@ When you are finished, please upload your completed work to your Github and invi
 Please take some time to answer the following questions. Your answers should go directly in this `readme`.
 
 - Given more time, what would you suggest for improving the performance of this app?
+```
+While this dataset is not large, I would consider implementing lazy loading or pagination if we were fetching thousands of records. This could make implementing the search a bit trickier, and depending on other factors, you may want to move the filtering server-side. In this case, we have no control over the external API.
+
+You could cache the API responses using something like Redux, or you could set a max-age in the HTTP header. I would also consider a debounce on the search input. In this case, I'm using useRef to recalculate the searchresults, but if there were 'expensive' calculations being made like large datasets with tons of filtering logic (i.e. partial matching on multiple searchterms for multiple columns, in multiple rows of a grid) a debounce could be helpful.
+
+
+```
 
 - Is there anything you would consider doing if we were to go live with this app?
 
+```
+If we were to go live with this application, I would consider using a middleware like NextJS to implement a proxy layer for api calls. This can be helpful for obscuring sensitive information like an API key, enable cacheing of api responses, consolidating data from multiple sources, or server-side rendering.
+
+If I had more time, I would also sanitize user input, although the user is not posting to a db so that might not be a huge concern. I did add some things to improve the accesibility of this app such the aria-live, aria-labelledby, and the useRef managing the focus for screen readers, but there are more improvements that could be made such as swapping out divs for semantic html elements where necessary.
+
+I would also containerize this app, and add environmental variables so that this could be spun up in a local dev environment, but also to facilitate building and deploying in dev, qa, and prod environmenta.
+
+Unit tests and regression tests could also be created and used with CircleCI as a part of a CI/CD pipeline. This would help ensure new changes don't break functionality, and can be set up to test any new Pullrequests and prevent code from being merged unless it passed all tests and built successfully.
+```
+
 - What was the most challenging aspect of this work for you (if at all)?
+
+```
+If I had to pick something as the most challenging aspect of this project, it would be deciding whether to use the provided url resource from the return of the fetchPokemonSpeciesByName endpoint. The API provides a url that fetches the evolution chain. In the end I chose to strip the species ID from the url and use that to feed into our own fetchEvolutionChainById call to the API. There are pro and cons to using the provided url. One pro is that if the api updated, we could just use the new url if it changed. The con is that you now have a dependency on the exact url structure. This could also make it trickier to mock in unit or regression tests.
+
+A pro, is that you can be more consist in all of your calls to endpoints. If you have a url builder that does additional things like passing params, API keys, headers, specifiying http or https, or if you implemented a middleware like nextJS to send your calls through a proxy layer, it would be better to strip the ID and make the call yourself. In this case, there aren't enviornmental related urls, but that is also a consideration.
+
+```
